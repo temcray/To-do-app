@@ -8,11 +8,13 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var taskGroups = TaskGroup.sampleData
+    @State private var taskGroups : [TaskGroup] = []
     @State private var selectedGroup: TaskGroup?
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     @State private var isShowingAddGroup = false
     @State private var isDarkMode = false
+    @Environment(\.scenePhase) private var scenePhase
+    let saveKey = "SavedTaskGroup"
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility){
             List(selection: $selectedGroup){
@@ -64,8 +66,44 @@ struct ContentView: View {
                 selectedGroup = newGroup
             }
         }
+        
+        .onAppear{
+            loadData()
+        }
+        .onChange(of: scenePhase){ oldValue, newValue in
+            if newValue == .active{
+                print("App is Active")
+            } else if newValue == .inactive {
+                print("Look out user is going out (Inactive)")
+            } else if newValue == .background{
+                print("background")
+                saveData()
+            }
+            
+        }
+    }
+    
+    func saveData(){
+        if let encodedData = try? JSONEncoder().encode(taskGroups){
+            UserDefaults.standard.set(encodedData, forKey: saveKey)
+        }
+    }
+    
+    func loadData(){
+        if let saveData = UserDefaults.standard.data(forKey: saveKey){
+            if let decodedGroups = try? JSONDecoder().decode([TaskGroup].self, from: saveData){
+                
+                
+                taskGroups = decodedGroups
+                return
+            }
+        }
+        taskGroups = TaskGroup.sampleData
     }
 }
+    
+    
+
 
 #Preview {
     ContentView()
