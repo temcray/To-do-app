@@ -28,13 +28,13 @@ struct DashboardView: View {
                             .font(.caption)
                     }
                     LazyVGrid(columns: colums, spacing: 25){
-                        NavigationLink(value: profiles){
-                        ForEach($profiles) {  profileImage in
+                        ForEach($profiles) {  $profile in
+                            NavigationLink(value: profile){
                             Image(profile.profileImage)
                                 .resizable()
                                 .scaledToFit()
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                            Text(profiles.name)
+                            Text(profile.name)
                                 .fontWeight(.bold)
                                 }
                         .buttonStyle(PlainButtonStyle())
@@ -46,7 +46,7 @@ struct DashboardView: View {
             .navigationTitle("Home")
             .navigationDestination(for: Profile.self){ selectedProfile in
                 if let index = profiles.firstIndex(where: {$0.id == selectedProfile.id} ){
-                    ContentView(porfile: ))
+                    ContentView(profile: $profiles[index])
                 }
                 
             }

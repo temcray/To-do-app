@@ -16,15 +16,13 @@ struct ContentView: View {
     @Environment(\.scenePhase) private var scenePhase
     let saveKey = "SavedTaskGroup"
     @Environment(\.dismiss) private var dismiss
-    @Binding var porfile: Profile
+    @Binding var profile: Profile
     
     var body: some View {
         NavigationSplitView(columnVisibility: $columnVisibility){
             List(selection: $selectedGroup){
-                ForEach(porfile.groups) {group in
+                ForEach(profile.groups) {group in
                     NavigationLink(value: group){
-                        
-                        
                         Label(group.title, systemImage: group.SymbolName)
                     }
                 }
@@ -41,92 +39,90 @@ struct ContentView: View {
                             .foregroundStyle(.primary)
                             .padding(8)
                             .background(Circle().fill(Color.primary.opacity(0.1)))
-                        
-                        
                     }
                     
                 }
-                ToolbarItem(placment: .primaryAction){
-                    
-                    
+                ToolbarItem(placement: .primaryAction){
                     Button{
-                        
-                        
-                        
                         isShowingAddGroup = true
                     } label: {
                         Image(systemName: "plus")
                     }
                 }
                 
-                .toolbar{
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button{
-                            isDarkMode.toggle()
-                        } label: {
-                            Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
-                        }
-                    }
-                }
-                //.preferredColorScheme(isDarkMode ? .dark : .light)
-            }detail: {
-                if let group = selectedGroup {
-                    if let index = profile.groups.firstIndex(where: {$0.id == group.id}){
-                        TaskGroupDetailView(groups: $profile.groups[index])
-                    }
-                } else {
-                    ContentUnavailableView("Select a group", image: "sidebar.left")
-                }
-                
             }
             
+            //                    ToolbarItem(placement: .topBarTrailing) {
+            //                        Button{
+            //                            isDarkMode.toggle()
+            //                        } label: {
+            //                            Image(systemName: isDarkMode ? "sun.max.fill" : "moon.fill")
+            //                        }
+            //                    }
             
-            
-            .sheet(isPresented: $isShowingAddGroup){
-                NewGroupView { newGroup in
-                    taskGroups.append(newGroup)
-                    selectedGroup = newGroup
+            //.preferredColorScheme(isDarkMode ? .dark : .light)
+        }detail: {
+            if let group = selectedGroup {
+                if let index = profile.groups.firstIndex(where: {$0.id == group.id}){
+                    TaskGroupDetailView(groups: $profile.groups[index])
                 }
+            } else {
+                ContentUnavailableView("Select a group", image: "sidebar.left")
             }
             
-            .onAppear{
-                loadData()
-            }
-            .onChange(of: scenePhase){ oldValue, newValue in
-                if newValue == .active{
-                    print("App is Active")
-                } else if newValue == .inactive {
-                    print("Look out user is going out (Inactive)")
-                } else if newValue == .background{
-                    print("background")
-                    saveData()
-                }
-                
+        }
+        
+        
+        .navigationBarHidden(true)
+        .sheet(isPresented: $isShowingAddGroup){
+            NewGroupView { newGroup in
+                taskGroups.append(newGroup)
+                profile.groups.append(newGroup)
             }
         }
         
-        func saveData(){
-            if let encodedData = try? JSONEncoder().encode(profile.groups){
-                UserDefaults.standard.set(encodedData, forKey: saveKey)
+        .onAppear{
+            loadData()
+        }
+        .onChange(of: scenePhase){ oldValue, newValue in
+            if newValue == .active{
+                print("App is Active")
+            } else if newValue == .inactive {
+                print("Look out user is going out (Inactive)")
+            } else if newValue == .background{
+                print("background")
+                saveData()
             }
+            
         }
         
-        func loadData(){
-            if let saveData = UserDefaults.standard.data(forKey: saveKey){
-                if let decodedGroups = try? JSONDecoder().decode([profile.groups].self, from: saveData){
-                    
-                    
-                    profile.groups = decodedGroups
-                    return
-                }
-            }
-            if profile.groups.isEmpty{
-                profile.groups = profile.groups.sampleData
-            }
-        }
     }
     
     
+    func saveData(){
+        if let encodedData = try? JSONEncoder().encode(profile.groups){
+            UserDefaults.standard.set(encodedData, forKey: saveKey)
+        }
+    }
     
-    
+    func loadData(){
+        if let saveData = UserDefaults.standard.data(forKey: saveKey){
+            if let decodedGroups = try? JSONDecoder().decode([TaskGroup].self, from: saveData){
+                profile.groups = decodedGroups
+                return
+            }
+        }
+        if profile.groups.isEmpty{
+            profile.groups = TaskGroup.sampleData
+            
+        }
+    }
 }
+
+
+
+
+
+
+
+

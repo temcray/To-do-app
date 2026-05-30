@@ -43,8 +43,8 @@ extension TaskGroup {
 
 extension Profile {
     static let sampleData: [Profile] = [
-        Profile(name: "profile", profileImage: "", groups: TaskGroup.sampleData),
-        Profile(name: "Student", profileImage: "", groups: []),
+        Profile(name: "profile", profileImage: "student_en 1", groups: TaskGroup.sampleData),
+        Profile(name: "Student", profileImage: "school", groups: []),
     ]
 }
 
