@@ -5,15 +5,29 @@
 //  Created by Tatiana6mo on 5/12/26.
 //
 
-import Testing
+import XCTest
+final class ToDO_TaskUITests: XCTestCase {
+    let app = XCUIApplication()
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        XCUIApplication().launch()
+    }
+    
+    override func tearDownWithError() throws {
+        
+    }
+}
 @testable import To_do_app
 
 struct To_do_appTests {
 
-    @Test func example() async throws {
+    //@Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.
         // Swift Testing Documentation
         // https://developer.apple.com/documentation/testing
-    }
-
+    
+    
+    let profileButton = app.buttons["ProfileCard_ProfileButton"]
+    
+    
 }

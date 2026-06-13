@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DashboardView: View {
     @State private var profiles: [Profile] = Profile.sampleData
+    @AppStorage("isDarkMode") private var isDarkMode: Bool = false
     @State private var path = NavigationPath()
     
     let colums = [
@@ -19,7 +20,7 @@ struct DashboardView: View {
     var body: some View {
         NavigationStack(path: $path){
             ScrollView{
-                VStack{
+                VStack(spacing: 40){
                     VStack{
                         Text("Welcome Back")
                             .font(.subheadline)
@@ -38,9 +39,11 @@ struct DashboardView: View {
                                 .fontWeight(.bold)
                                 }
                         .buttonStyle(PlainButtonStyle())
+                        .accessibilityIdentifier("ProfileCard_\(profile.name)")
                               
                             }
                         }
+                    .padding(.horizontal)
                     }
                 }
             .navigationTitle("Home")
