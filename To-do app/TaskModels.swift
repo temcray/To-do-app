@@ -8,10 +8,18 @@
 import Foundation
 import Combine
 
+enum Priority: String, Codable, CaseIterable, Hashable {
+    case low
+    case medium
+    case high
+    
+}
+
 struct TaskItem: Identifiable, Hashable, Codable {
     var id = UUID()
     var title: String
     var isCompleted: Bool = false
+    var priority: Priority = .medium
 }
 
 struct TaskGroup: Identifiable, Hashable, Codable {

@@ -6,28 +6,33 @@
 //
 
 import XCTest
-final class ToDO_TaskUITests: XCTestCase {
-    let app = XCUIApplication()
-    override func setUpWithError() throws {
-        continueAfterFailure = false
-        XCUIApplication().launch()
-    }
-    
-    override func tearDownWithError() throws {
-        
-    }
-}
 @testable import To_do_app
 
-struct To_do_appTests {
+final class To_do_AppTest: XCTestCase {
+    
+    
+    func testTaskItemDefaultDate() {
+        let task = TaskItem(title: "Grade papers", isCompleted: false)
+        
+        XCTAssertEqual(task.title, "Grade papers")
+        XCTAssertFalse(task.isCompleted, "New task should not have their inCompled as true initially")
+        XCTAssertEqual(task.priority, .medium, "A new task should default to medium priority" )
+    }
+    
+    // TEST: CALCULATION LOGIC
+    func testGroupCalculation() {
+        let tasks = [
+            TaskItem(title: "Task 1", isCompleted: true),
+            TaskItem(title: "Task 2", isCompleted: true),
+            TaskItem(title: "Task 3", isCompleted: true),
+            TaskItem(title: "Task 4", isCompleted: true)
+        ]
+        
+        let completedCount =  tasks.filter {$0.isCompleted}.count
+            let Progress = tasks.isEmpty ? 0 : Double(completedCount) / Double(tasks.count)
+        }
+    
+    //
+    }
 
-    //@Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
-        // Swift Testing Documentation
-        // https://developer.apple.com/documentation/testing
-    
-    
-    let profileButton = app.buttons["ProfileCard_ProfileButton"]
-    
-    
-}
+

@@ -31,6 +31,17 @@ struct TaskGroupDetailView: View {
                     TextField("Task Title", text: $task.title)
                         .strikethrough(task.isCompleted)
                         .foregroundStyle(task.isCompleted ? .brown : .gray)
+                    Spacer()
+                    
+                    Picker("Priority", selection: $task.priority) {
+                        ForEach(Priority.allCases, id: \.self) { p in
+                            Text(p.rawValue.capitalized).tag(p)
+                            
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .accessibilityIdentifier("TaskPriorityPicker_\(task.id)")
                 }
             }
             .onDelete { index in
